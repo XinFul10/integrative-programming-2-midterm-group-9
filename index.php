@@ -41,9 +41,9 @@
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Address</th>
+                    <th scope="col">Uniform Size</th>
+                    <th scope="col">Payment Status</th>
+                    <th scope="col">Payment Date</th>
                     <th scope="col" class="text-center">Action</th>
                   </tr>
                 </thead>

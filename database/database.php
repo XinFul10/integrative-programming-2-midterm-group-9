@@ -1,6 +1,6 @@
 <?php
     $servername = "localhost";
-    $db_name = "records_ipt2";
+    $db_name = "unifrecords";
     $username = "root";
     $password = "";
 
