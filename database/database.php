@@ -1,18 +1,16 @@
 <?php
-    $servername = "localhost";
-    $db_name = "unifrecords";
-    $username = "root";
-    $password = "";
+  $server_name = "localhost";
+  $db_name = "uniformrecords";
+  $db_username = "root";
+  $db_password = "";
 
-    //connection
-    $conn = new mysqli($servername, $username, $password, $db_name);
-
-    //check connection
-    if ($conn->connect_error) {
-        die("connection failed". $conn->connect_error);
-    }
-
-
+  $conn = new mysqli($server_name, $db_username, $db_password, $db_name);
+  
+  if($conn->connect_error){
+    die("Database connection failed. " . $conn->connect_error);
+  }else{
+    echo "Database Connection Successful.";
+  }
 
 
 ?>
