@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Pages / Register - NiceAdmin Bootstrap Template</title>
+  <title>Create your Account</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -28,6 +28,7 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/reg.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: NiceAdmin
@@ -39,7 +40,6 @@
 </head>
 
 <body>
-
   <main>
     <div class="container">
 
@@ -50,65 +50,106 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <span class="d-none d-lg-block">NiceAdmin</span>
+                  <img src="assets/img/logo.jpg" alt="">
+                  <span class="d-none d-lg-block">Uniform Records System</span>
                 </a>
               </div><!-- End Logo -->
 
               <div class="card mb-3">
+    <div class="card-body">
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
+            <p class="text-center small">Please fillup the following to create your personal account</p>
+        </div>
+  
+        <?php
+include 'database/registry.php';
 
-                <div class="card-body">
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $username = $_POST['username'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Securely hash the password
 
-                  <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
-                    <p class="text-center small">Enter your personal details to create account</p>
-                  </div>
+    $sql = "INSERT INTO registeredusers (name, email, username, password) VALUES ('$name', '$email', '$username', '$password')";
 
-                  <form class="row g-3 needs-validation" novalidate>
-                    <div class="col-12">
-                      <label for="yourName" class="form-label">Your Name</label>
-                      <input type="text" name="name" class="form-control" id="yourName" required>
-                      <div class="invalid-feedback">Please, enter your name!</div>
-                    </div>
+    if ($conn->query($sql) === TRUE) {
+        // Redirect to login.php with a success message
+        header("Location: login.php?message=success");
+        exit(); // Ensure no further code is executed after redirection
+    } else {
+        $error = "Error: Unable to register user. Please try again.";
+    }
+}
+?>
 
-                    <div class="col-12">
-                      <label for="yourEmail" class="form-label">Your Email</label>
-                      <input type="email" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                    </div>
 
-                    <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
-                      <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please choose a username.</div>
-                      </div>
-                    </div>
+        <form  action="register.php"  method="POST">
+            <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Name " required>
+                <div class="invalid-feedback">Please enter your name!</div>
+            </div>
 
-                    <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
-                    </div>
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="@Email :" required >
+                <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+            </div>
 
-                    <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
-                        <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="#">terms and conditions</a></label>
-                        <div class="invalid-feedback">You must agree before submitting.</div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Create Account</button>
-                    </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Already have an account? <a href="pages-login.html">Log in</a></p>
-                    </div>
-                  </form>
-
+            <div class="form-group">
+                <div class="input-group has-validation">
+                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    <div class="invalid-feedback">Please make your username.</div>
                 </div>
-              </div>
+            </div>
+
+            <div style="position: relative; width: 100%;">
+    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required style="width: 100%; padding-right: 40px;">
+    <span onclick="togglePassword()" id="toggleIcon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.2rem;">
+        👁️ <!-- Eye icon for "Show" -->
+    </span>
+                <div class="invalid-feedback">Please enter your password!</div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                    <label class="form-check-label" for="acceptTerms">I agree and accept the <a href="database/Register.php">terms and conditions</a></label>
+                    <div class="invalid-feedback">You must agree to the terms before submitting.</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Create Account</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Already have an account? <a href="login.php">Log in</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Display Success or Error Messages -->
+<?php if (!empty($success)): ?>
+    <div style="color: green;"><?php echo $success; ?></div>
+<?php endif; ?>
+
+<?php if (!empty($error)): ?>
+    <div style="color: red;"><?php echo $error; ?></div>
+<?php endif; ?>
+
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const toggleIcon = event.target;
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Show password
+        toggleIcon.textContent = "👁️"; // Replace eye icon with "hide" icon
+    } else {
+        passwordField.type = "password"; // Hide password
+        toggleIcon.textContent = "🙈"; // Replace back with "show" icon
+    }
+}
+</script>
 
               <div class="credits">
                 <!-- All the links in the footer should remain intact. -->

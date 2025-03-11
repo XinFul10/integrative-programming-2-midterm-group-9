@@ -5,13 +5,13 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Pages / Login - NiceAdmin Bootstrap Template</title>
+  <title>Login</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/Logo.jpg" rel="icon">
+  <link href="assets/img/Logo.jpg" rel="Logo-SorSu-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -28,6 +28,9 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/login.css" rel="stylesheet">
+  
+  
 
   <!-- =======================================================
   * Template Name: NiceAdmin
@@ -38,7 +41,7 @@
   ======================================================== -->
 </head>
 
-<body>
+<body class="login" >
 
   <main>
     <div class="container">
@@ -50,54 +53,107 @@
 
               <div class="d-flex justify-content-center py-4">
                 <a href="index.html" class="logo d-flex align-items-center w-auto">
-                  <img src="assets/img/logo.png" alt="">
-                  <span class="d-none d-lg-block">NiceAdmin</span>
+                  <img src="assets/img/logo.jpg" alt="">
+                  <span class="d-none d-lg-block">Uniform Records System</span>
                 </a>
               </div><!-- End Logo -->
 
               <div class="card mb-3">
+    <div class="card-body">
+        <div class="pt-4 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
+            <p class="text-center small">Enter your login creditials to proceed</p>
+        </div>
 
-                <div class="card-body">
+        <?php
+// Display success message if redirected after registration
+if (isset($_GET['message']) && $_GET['message'] == 'success') {
+    echo "<div style='color: green; text-align: center;'>Registration successful!<br> You can now log in.</div>";
+}
+?>
 
-                  <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                    <p class="text-center small">Enter your username & password to login</p>
-                  </div>
 
-                  <form class="row g-3 needs-validation" novalidate>
+        <?php
+include 'database/registry.php';
+session_start();
 
-                    <div class="col-12">
-                      <label for="yourUsername" class="form-label">Username</label>
-                      <div class="input-group has-validation">
-                        <span class="input-group-text" id="inputGroupPrepend">@</span>
-                        <input type="text" name="username" class="form-control" id="yourUsername" required>
-                        <div class="invalid-feedback">Please enter your username.</div>
-                      </div>
-                    </div>
+$error = ""; // Initialize an error message variable
 
-                    <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" required>
-                      <div class="invalid-feedback">Please enter your password!</div>
-                    </div>
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-                    <div class="col-12">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">Remember me</label>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Login</button>
-                    </div>
-                    <div class="col-12">
-                      <p class="small mb-0">Don't have account? <a href="pages-register.html">Create an account</a></p>
-                    </div>
-                  </form>
+    $sql = "SELECT * FROM registeredusers WHERE username='$username'";
+    $result = $conn->query($sql);
 
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
+            // Store user information in the session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header("Location: index.php");
+            exit();
+        } else {
+            $error = "Invalid password."; // Set the error message
+        }
+    } else {
+        $error = "No user found with that username."; // Set the error message
+    }
+}
+?>
+
+        <form class="login" novalidate method="POST" action="login.php">
+            <div class="col-12">
+                <div class="input-group has-validation">
+                    <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    <div class="invalid-feedback">Please enter your username.</div>
                 </div>
-              </div>
+            </div>
 
+            <div style="position: relative; width: 100%;">
+    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required style="width: 100%; padding-right: 40px;">
+    <span onclick="togglePassword()" id="toggleIcon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.2rem;">
+        👁️ <!-- Eye icon for "Show" -->
+    </span>
+                <div class="invalid-feedback">Please enter your password!</div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary w-100" type="submit">Login</button>
+            </div>
+            <div class="col-12">
+                <p class="small mb-0">Don't have an account? <a href="register.php">Create an account</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Display Error Messages -->
+<?php if (!empty($error)): ?>
+    <div style="color: red;"><?php echo $error; ?></div>
+<?php endif; ?>
+
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const toggleIcon = event.target;
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Show password
+        toggleIcon.textContent = "👁️"; // Replace eye icon with "hide" icon
+    } else {
+        passwordField.type = "password"; // Hide password
+        toggleIcon.textContent = "🙈"; // Replace back with "show" icon
+    }
+}
+</script>
               <div class="credits">
                 <!-- All the links in the footer should remain intact. -->
                 <!-- You can delete the links only if you purchased the pro version. -->
