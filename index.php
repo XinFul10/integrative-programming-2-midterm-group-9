@@ -163,8 +163,8 @@ $result = $conn->query(query: $sql);
           <div class="form-group">
             <label for="sex">Sex:</label>
             <select class="form-control" id="sex" name="sex" required>
-              <option value="BSIS">Male</option>
-              <option value="BSIT">Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
           </div>
           <div class="form-group">
