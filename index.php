@@ -3,6 +3,9 @@
   include('partials\sidebar.php');
   include('database\database.php');
   
+  //$sql = "SELECT * FROM students";
+  //$result = $conn->query($sql);
+  
 
   // Your PHP BACK CODE HERE
   $search = "";
@@ -18,13 +21,21 @@ if (isset($_GET['search'])) {
 } else {
     $sql = "SELECT * FROM clients";
 }
-$result = $conn->query($sql);
+$result = $conn->query(query: $sql);
 
 ?>
  <main id="main" class="main">
   
     <div class="pagetitle">
-      <h1>Uniform record system</h1>
+      <h1>URS
+      </h1>
+      <!-- <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+          <li class="breadcrumb-item">Tables</li>
+          <li class="breadcrumb-item active">General</li>
+        </ol>
+      </nav> -->
     </div><!-- End Page Title -->
 
     <section class="section">
@@ -35,10 +46,10 @@ $result = $conn->query($sql);
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div>
-                  <h5 class="card-title">Student Table</h5>
+                  <h5 class="card-title">Record Table</h5>
                 </div>
                 <div>
-                  <button  type="button" class="btn btn-primary btn-sm mt-4 mx-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Student</button>
+                  <button  type="button" class="btn btn-primary btn-sm mt-4 mx-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Record</button>
                 </div>
 
               </div>
@@ -54,7 +65,7 @@ $result = $conn->query($sql);
                     <th scope="col">Course</th>
                     <th scope="col">Sex</th>
                     <th scope="col">Size</th>
-                    <th scope="col">Payment Status</th>
+                    <th scope="col">Status</th>
                     <th scope="col" class="text-center">Action</th>
                   </tr>
                 </thead>
@@ -62,7 +73,7 @@ $result = $conn->query($sql);
     <?php if ($result->num_rows > 0): ?>
       <?php while($row = $result->fetch_assoc()): ?>
         <tr>
-          <td><?= $row['ID'] ?></td>
+          <td><?= $row['id'] ?></td>
           <td><?= $row['firstname'] ?></td>
           <td><?= $row['lastname'] ?></td>
           <td><?= $row['course'] ?></td>
@@ -71,28 +82,28 @@ $result = $conn->query($sql);
           <td><?= $row['paymentstatus'] ?></td>
           <td class="text-center">
             <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#viewStudentModal" 
-                    data-id="<?= $row['ID'] ?>"
+                    data-id="<?= $row['id'] ?>"
                     data-firstname="<?= $row['firstname'] ?>"
                     data-lastname="<?= $row['lastname'] ?>"
                     data-course="<?= $row['course'] ?>"
-                    data-year="<?= $row['sex'] ?>"
-                    data-block="<?= $row['size'] ?>"
-                    data-status="<?= $row['paymentstatus'] ?>">View</button>
+                    data-sex="<?= $row['sex'] ?>"
+                    data-size="<?= $row['size'] ?>"
+                    data-paymentstatus="<?= $row['paymentstatus'] ?>">View</button>
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStudentModal" 
-                    data-id="<?= $row['ID'] ?>"
+                    data-id="<?= $row['id'] ?>"
                     data-firstname="<?= $row['firstname'] ?>"
                     data-lastname="<?= $row['lastname'] ?>"
                     data-course="<?= $row['course'] ?>"
-                    data-year="<?= $row['sex'] ?>"
-                    data-block="<?= $row['size'] ?>"
-                    data-status="<?= $row['paymentstatus'] ?>">Edit</button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStudentModal" data-id="<?= $row['ID'] ?>">Delete</button>
+                    data-sex="<?= $row['sex'] ?>"
+                    data-size="<?= $row['size'] ?>"
+                    data-paymentstatus="<?= $row['paymentstatus'] ?>">Edit</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStudentModal" data-id="<?= $row['id'] ?>">Delete</button>
           </td>
         </tr>
       <?php endwhile; ?>
     <?php else: ?>
       <tr>
-        <td colspan="8" class="text-center">No records found</td>
+        <td colspan="8" class="text-center">No record found</td>
       </tr>
     <?php endif; ?>
   </tbody>
@@ -142,19 +153,36 @@ $result = $conn->query($sql);
           </div>
           <div class="form-group">
             <label for="course">Course:</label>
-            <input type="text" class="form-control" id="course" name="course" required>
+            <select class="form-control" id="course" name="course" required>
+              <option value="BSIS">BSIS</option>
+              <option value="BSIT">BSIT</option>
+              <option value="BSCS">BSCS</option>
+              <option value="BTVTED">BTVTED</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="year">Sex:</label>
-            <input type="text" class="form-control" id="sex" name="sex" required>
+            <label for="sex">Sex:</label>
+            <select class="form-control" id="sex" name="sex" required>
+              <option value="BSIS">Male</option>
+              <option value="BSIT">Female</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="block">Size:</label>
-            <input type="text" class="form-control" id="size" name="size" required>
+            <label for="size">Size:</label>
+            <select class="form-control" id="size" name="size" required>
+              <option value="Extra Small">Extra Small</option>
+              <option value="Small">Small</option>
+              <option value="Medium">Medium</option>
+              <option value="Large">Large</option>
+              <option value="Extra Large">Extra Large</option>
+            </select>
           </div>
           <div class="form-group">
-            <label for="status">Payment Status:</label>
-            <input type="text" class="form-control" id="paymentstatus" name="paymentstatus" required>
+            <label for="paymentstatus">Payment Status:</label>
+            <select class="form-control" id="paymentstatus" name="paymentstatus" required>
+              <option value="Paid">Paid</option>
+              <option value="Not Paid">Not Paid</option>
+            </select>
           </div>
           <button type="submit" class="btn btn-primary mt-3">Add Student</button><br>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -179,7 +207,7 @@ $result = $conn->query($sql);
         <p><strong>Course:</strong> <span id="view-course"></span></p>
         <p><strong>Sex:</strong> <span id="view-sex"></span></p>
         <p><strong>Size:</strong> <span id="view-size"></span></p>
-        <p><strong>Payment Status:</strong> <span id="view-paymentstatus"></span></p>
+        <p><strong>Status:</strong> <span id="view-paymentstatus"></span></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -195,41 +223,65 @@ $result = $conn->query($sql);
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+        <h5 class="modal-title" id="editStudentModalLabel">Edit Info</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="edit-student-form" method="post" action="database/update.php">
           <input type="hidden" name="id" id="edit-id">
+
           <div class="mb-3">
             <label for="edit-firstname" class="form-label">First Name</label>
-            <input type="text" class="form-control" name="firstname" id="edit-firstname">
+            <input type="text" class="form-control" name="firstname" id="edit-firstname" required>
           </div>
+
           <div class="mb-3">
             <label for="edit-lastname" class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="lastname" id="edit-lastname">
+            <input type="text" class="form-control" name="lastname" id="edit-lastname" required>
           </div>
+
           <div class="mb-3">
             <label for="edit-course" class="form-label">Course</label>
-            <input type="text" class="form-control" name="course" id="edit-course">
+            <select class="form-control" id="course" name="course" required>
+              <option value="BSIS">BSIS</option>
+              <option value="BSIT">BSIT</option>
+              <option value="BSCS">BSCS</option>
+              <option value="BTVTED">BTVTED</option>
+            </select>
           </div>
+
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="edit-year" class="form-label">Sex</label>
-              <input type="text" class="form-control" name="sex" id="edit-sex">
+              <label for="edit-sex" class="form-label">Sex</label>
+              <select class="form-control" id="edit-sex" name="sex" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
             </div>
+
             <div class="col-md-6 mb-3">
-              <label for="edit-block" class="form-label">Size</label>
-              <input type="text" class="form-control" name="size" id="edit-size">
+              <label for="edit-size" class="form-label">Size</label>
+              <select class="form-control" id="edit-size" name="size" required>
+                <option value="Extra Small">Extra Small</option>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+                <option value="Extra Large">Extra Large</option>
+              </select>
             </div>
           </div>
+
           <div class="mb-3">
-            <label for="edit-status" class="form-label">Payment Status</label>
-            <input type="text" class="form-control" name="paymentstatus" id="edit-paymentstatus">
+            <label for="edit-paymentstatus" class="form-label">Payment Status</label>
+            <select class="form-control" id="edit-paymentstatus" name="paymentstatus" required>
+              <option value="Paid">Paid</option>
+              <option value="Not Paid">Not Paid</option>
+            </select>
           </div>
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Updated</button>
+            <button type="submit" class="btn btn-primary">Update</button>
           </div>
         </form>
       </div>
@@ -243,11 +295,11 @@ $result = $conn->query($sql);
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteStudentModalLabel">Delete Student</h5>
+        <h5 class="modal-title" id="deleteStudentModalLabel">Delete Record</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Are you sure you want to delete this student?</p>
+        <p>Are you sure you want to delete this record?</p>
       </div>
       <div class="modal-footer">
         <form id="delete-student-form" method="post" action="database/delete.php">
