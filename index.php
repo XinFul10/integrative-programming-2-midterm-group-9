@@ -3,9 +3,6 @@
   include('partials\sidebar.php');
   include('database\database.php');
   
-  //$sql = "SELECT * FROM students";
-  //$result = $conn->query($sql);
-  
 
   // Your PHP BACK CODE HERE
   $search = "";
@@ -29,14 +26,7 @@ $result = $conn->query(query: $sql);
     <div class="pagetitle">
       <h1>URS
       </h1>
-      <!-- <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-          <li class="breadcrumb-item">Tables</li>
-          <li class="breadcrumb-item active">General</li>
-        </ol>
-      </nav> -->
-    </div><!-- End Page Title -->
+    </div>
 
     <section class="section">
       <div class="row">
